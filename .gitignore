@@ -1,0 +1,22 @@
+# Python / tools
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+logs/
+error_log.txt
+.env
+
+# Page builder temporary preview
+site/_preview.html
+
+# Old archive versions (not published)
+assets/archives/*.html
+
+# Windows shortcut (machine-specific paths)
+*.lnk
+
+# Office lock files and OS clutter
+~$*
+Thumbs.db
+desktop.ini

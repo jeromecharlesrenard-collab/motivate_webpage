@@ -1,0 +1,196 @@
+/* ==========================================================================
+   MOTIVATE - shared styles for every page (index.html + 01..13 page files)
+   Page-specific .style-one ... .style-seven rules live in each page's <style>.
+   ========================================================================== */
+
+html {
+    /* Fluid root font size: keeps every rem value below proportional
+       across monitors of different resolution/DPI instead of a fixed
+       16px base that only looked right on one screen. */
+    font-size: clamp(10px, 0.7vw + 6px, 20px);
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+    background-color: white;
+    font-family: 'Arial Black', sans-serif;
+    text-align: center;
+    line-height: 1.2;
+    overflow-x: hidden;
+}
+
+/* ---------- Page ---------- */
+.page {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 5vw;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.sub-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ---------- Text colors ---------- */
+.blue { color: #0070c0; }
+.red { color: #ff0000; }
+.green { color: #00b050; }
+.white { color: #FFFFFF; }
+.bluejr { color: #083a5e; }
+
+/* A line of text that links to another page, without changing its look */
+.text-link {
+    color: inherit;
+    text-decoration: none;
+}
+.text-link:hover { text-decoration: underline; }
+.text-link:focus-visible { outline: 2px solid #0070c0; outline-offset: 3px; }
+
+/* ---------- Hamburger menu ---------- */
+.menu-btn {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+}
+.menu-btn span {
+    display: block;
+    height: 3px;
+    width: 20px;
+    background: #000000;
+    border-radius: 1px;
+}
+.menu-btn:focus-visible { outline: 2px solid #0070c0; outline-offset: 3px; }
+
+/* ---------- Page number indicator ---------- */
+.page-indicator {
+    position: fixed;
+    top: 52px;
+    left: 10px;
+    width: 30px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    color: #000000;
+    z-index: 30;
+    pointer-events: none;
+}
+
+/* ---------- Page toggle buttons ---------- */
+.page-toggle-group {
+    position: fixed;
+    top: 20px;
+    left: 50px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 30;
+}
+.page-toggle-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.1rem;
+    line-height: 1;
+    color: #000000;
+}
+.page-toggle-btn:hover { color: #0070c0; }
+.page-toggle-btn:focus-visible { outline: 2px solid #0070c0; outline-offset: 3px; }
+
+/* ---------- Slide-out navigation panel ---------- */
+.nav-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 230px;
+    background: #ffffff;
+    border-right: 2px solid #000000;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    z-index: 20;
+    padding: 84px 0 0 0;
+    overflow-y: auto;
+}
+.nav-panel.open { transform: translateX(0); }
+.nav-panel a {
+    display: block;
+    padding: 5px 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000;
+    text-decoration: none;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.nav-panel a:hover { background: #f0f0f0; }
+.nav-panel a.current { background: #dcdcdc; }   /* current page: gray band, text stays black */
+
+.nav-scrim {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+}
+.nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+/* ---------- Page builder button (bottom right) ---------- */
+.builder-btn {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #000000;
+    color: #ffffff;
+    font-family: 'Arial Black', sans-serif;
+    font-size: 14px;
+    line-height: 26px;
+    text-align: center;
+    text-decoration: none;
+    z-index: 30;
+}
+.builder-btn:hover { background: #0070c0; }
+.builder-btn:focus-visible { outline: 2px solid #0070c0; outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-panel, .nav-scrim { transition: none; }
+}
+
+/*
+Font-weight numeric values (multiples of 100, if the font has those weights available):
+100 Thin, 200 Extra Light, 300 Light, 400 Normal, 500 Medium, 600 Semi Bold, 700 Bold, 800 Extra Bold, 900 Black
+Note: most fonts (including Calibri/Arial as loaded here) only actually ship a couple of real weights (e.g. 400 and 700)
+Intermediate numeric values will just snap to the nearest weight the font provides, or fall back to normal/bold.
+*/

@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300b050' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8'/><path d='M12 18V6'/></svg>">
+    <title>MOTIVATE WEDPAGE</title>
+    <style>
+        html {
+            /* Fluid root font size: keeps every rem value below proportional
+               across monitors of different resolution/DPI instead of a fixed
+               16px base that only looked right on one screen. */
+            font-size: clamp(10px, 0.7vw + 6px, 20px);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            height: 100%;
+            background-color: white;
+            font-family: 'Arial Black', sans-serif;
+            text-align: center;
+            line-height: 1.2;
+            overflow-x: hidden;
+        }
+
+        /* ---------- Pages ---------- */
+        .page {
+            min-height: 100vh;
+            width: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 5vw;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+        .page.active { display: flex; }
+
+        /* ---------- Text colors ---------- */
+        .blue { color: #0070c0; }
+        .red { color: #ff0000; }
+        .green { color: #00b050; }
+        .white { color: #FFFFFF; }
+        .bluejr { color: #083a5e; }
+
+                /* ---------- Hamburger menu ---------- */
+        .menu-btn {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
+        }
+        .menu-btn span {
+            display: block;
+            height: 3px;
+            width: 20px;
+            background: #000000;
+            border-radius: 1px;
+        }
+        .menu-btn:focus-visible { outline: 2px solid #0070c0; outline-offset: 3px; }
+
+        /* ---------- Page number indicator ---------- */
+        .page-indicator {
+            position: fixed;
+            top: 52px;
+            left: 10px;
+            width: 30px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 0.75rem;
+            color: #000000;
+            z-index: 30;
+            pointer-events: none;
+        }
+
+        /* ---------- Page toggle buttons ---------- */
+        .page-toggle-group {
+            position: fixed;
+            top: 20px;
+            left: 50px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 30;
+        }
+        .page-toggle-btn {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+            font-size: 1.1rem;
+            line-height: 1;
+            color: #000000;
+        }
+        .page-toggle-btn:hover { color: #0070c0; }
+        .page-toggle-btn:focus-visible { outline: 2px solid #0070c0; outline-offset: 3px; }
+
+        .nav-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 200px;
+            background: #ffffff;
+            border-right: 2px solid #000000;
+            transform: translateX(-100%);
+            transition: transform 0.2s ease;
+            z-index: 20;
+            padding: 84px 0 0 0;
+            box-sizing: border-box;
+        }
+        .nav-panel.open { transform: translateX(0); }
+        .nav-panel a {
+            display: block;
+            padding: 14px 24px;
+            font-size: 1rem;
+            color: #000000;
+            text-decoration: none;
+            text-align: left;
+        }
+        .nav-panel a:hover { background: #f0f0f0; }
+        .nav-panel a.current { color: #00b050; }
+
+        .nav-scrim {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.25);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 10;
+        }
+        .nav-scrim.open { opacity: 1; pointer-events: auto; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .nav-panel, .nav-scrim { transition: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navPanel">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="page-indicator" id="pageIndicator">1</div>
+    <div class="page-toggle-group" id="pageToggleGroup">
+        <button class="page-toggle-btn" id="prevPageBtn" aria-label="Previous page">&#9668;</button>
+        <button class="page-toggle-btn" id="nextPageBtn" aria-label="Next page">&#9658;</button>
+    </div>
+
+    <nav class="nav-panel" id="navPanel">
+        <a href="#1">Key Points</a>
+        <a href="#2">Marathon</a>
+        <a href="#3">Hope</a>
+        <a href="#4">Stops</a>
+        <a href="#5">Thinking</a>
+        <a href="#6">Page 6</a>
+        <a href="#7">Page7</a>
+        <a href="#8">Page 8</a>
+        <a href="#9">Why</a>
+        <a href="#10">Rules</a>
+        <a href="#11">Truths</a>
+        <a href="#12">Principles</a>
+    </nav>
+    <div class="nav-scrim" id="navScrim"></div>
+
+    <!-- ============================ PAGE 1 - KEY POINTS ============================ -->
+    <section class="page" id="1">
+        <style>
+            section[id="1"] .style-one { font-size: 4rem; font-family: 'Arial Black', sans-serif; color: #083a5e; font-weight: normal; }
+            section[id="1"] .style-two { font-size: 3rem; font-family: 'Arial Black', sans-serif; color: #0070c0; font-weight: normal; }
+            section[id="1"] .style-three { font-size: 3.2rem; font-family: 'Arial Black', sans-serif; color: #ff0000; font-weight: normal; }
+            section[id="1"] .style-four { font-size: 3rem; font-family: 'Arial Black', sans-serif; color: #00b050; font-weight: normal; }
+            section[id="1"] .style-five { font-size: 1.5rem; font-family: 'Arial Black', sans-serif; color: #FFFFFF; font-weight: normal; }
+            section[id="1"] .style-six { font-size: 5.7rem; font-family: 'Arial Black', sans-serif; color: #ff0000; font-weight: normal; }
+            section[id="1"] .style-seven { font-size: 5rem; font-family: 'Arial Black', sans-serif; color: #00b050; font-weight: normal; }
+        </style>
+
+        <div class="sub-section" style="display: flex; flex-direction: column; align-items: center; gap: 0.05rem;">
+        <div class="style-one">NO TRADE BEFORE 10:00am EDT</div>
+        <div class="style-five">&nbsp;</div>
+        <div class="style-two">OBJECTIVELY IDENTIFY MY EDGES</div>
+        <div class="style-two">PREDEFINE MY RISK&nbsp;&nbsp;&&nbsp;&nbsp;MY STOPS</div>
+        <div class="style-five">&nbsp;</div>
+        <div class="style-six">SET & FORGET</div>
+        <div class="style-three">DO NOT TOUCH MY STOPS</div>
+        <div class="style-five">&nbsp;</div>
+        <div class="style-seven">TRIM &bull; TRIM &bull; TRIM</div>
+        <div class="style-four">SET TARGETS & MANAGE TRADE</div>
+        <div class="style-five">&nbsp;</div>
+    </section>
+
+    <!-- ============================ PAGE 2 - MARATHON ============================ -->
+    <section class="page" id="2">
+        <style>
+            section[id="2"] .style-one { font-size: 5rem; font-family: 'Arial Black', sans-serif; color: #083a5e; font-weight: normal; }
+            section[id="2"] .style-two { font-size: 3rem; font-family: 'Arial Black', sans-serif; color: #0070c0; font-weight: normal; }
+            section[id="2"] .style-three { font-size: 4rem; font-family: 'Arial Black', sans-serif; color: #f80202; font-weight: normal; }
+            section[id="2"] .style-four { font-size: 3rem; font-family: 'Arial Black', sans-serif; color: #0070c0; font-weight: normal; }
+            section[id="2"] .style-five { font-size: 3rem; font-family: 'Arial Black', sans-serif; color: #FFFFFF; font-weight: normal; }
+        </style>
+
+        <div class="sub-section" style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+        <div class="style-one">THIS IS A MARATHON</div>
+        <div class="style-two">NEVER EVER ADD TO A LOOSER</div>
+        <div class="style-two">GET OUT OF A LOOSER QUICKLY</div>
+        <div class="style-two">DO NOT FEAR MISSING OUT TRADES</div>
+        <div class="style-two">NEVER MOVE MY STOPS - SUNK CURSE</div>
+        <div class="style-two">BE PATIENT - FOCUSED AND DISCIPLINED</div>
+        <div class="style-three">HOPE IS NOT A STRATEGY</div>
+        <div class="style-three">&nbsp;</div>
+    </section>
+
+    <!-- ============================ PAGE 3 - HOPE ============================ -->
+    <section class="page" id="3">
+        <style>
+            section[id="3"] .style-one { font-size: 7rem; font-family: 'Arial Black', sans-serif; color: #ff0000; font-weight: normal; }
+            section[id="3"] .style-two { font-size: 14rem; font-family: 'Arial Black', sans-serif; color: #ff0000; font-weight: normal; }
+            section[id="3"] .style-three { font-size: 2rem; font-family: 'Arial Black', sans-serif; color: #FFFFFF; font-weight: normal; }
+            section[id="3"] .style-four { font-size: 7rem; font-family: 'Arial Black', sans-serif; color: #ff0000; font-weight: normal; }
+            section[id="3"] .style-five { font-size: 2rem; font-family: 'Arial Black', sans-serif; color: #FFFFFF; font-weight: normal; }
+        </style>
+
+        <div class="sub-section" style="display: flex; flex-direction: column; align-items: center; gap: 3rem;">
+        <div class="style-one">X X X</div>
+           </section>
+
+    <!-- ============================ PAGE 4 - TBA ============================ -->
+    <section class="page" id="4">
+        <style>
+            section[id="4"] .style-one { font-size: 3.1rem; font-family: Arial, sans-serif; color: #083a5e; font-weight: bold; }
+            section[id="4"] .style-two { font-size: 3.3rem; font-family: Arial, sans-serif; color: #083a5e; font-weight: bold; }
+            section[id="4"] .style-three { font-size: 2rem; font-family: Arial, sans-serif; color: #FFFFFF; font-weight: normal; }
+            section[id="4"] .style-four { font-size: 4.5rem; font-family: Arial, sans-serif; color: #083a5e; font-weight: bold; }
+            section[id="4"] .style-five { font-size: 2rem; font-family: Arial, sans-serif; color: #FFFFFF; font-weight: normal; }
+        </style>
+
+        <div class="sub-section" style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+        <div class="style-one">STOP & THINK AFTER REACHING MY DAILY GOAL</div>
+        <div class="style-two">RESET MY MIND AFTER A  SIZABLE WIN</div>
+        <div class="style-three">&nbsp;</div>
+        <div class="style-four">DO NOT REVENGE TRADE</div>
+        <div class="style-four">DO NOT MAKE UP TRADE</div>
+        <div class="style-four">DO NOT OVER TRADE</div>
+        <div class="style-three">&nbsp;</div>
+    </section>
+
+    <!-- ============================ PAGE 5 - THINKING ============================ -->
+    <section class="page" id="5">
+        <style>
+            section[id="5"] .style-one { font-size: 1.6rem; font-family: 'Arial', sans-serif; color: #000000; font-weight: normal; }
+            section[id="5"] .style-two { font-size: 1rem; font-family: 'Arial', sans-serif; color: #000000; font-weight: normal; }
+            section[id="5"] .style-three { font-size: 1rem; font-family: 'Arial', sans-serif; color: #000000; font-weight: normal; }
+            section[id="5"] .style-four { font-size: 1rem; font-family: 'Arial', sans-serif; color: #000000; font-weight: normal; }
+            section[id="5"] .style-five { font-size: 1rem; font-family: 'Arial', sans-serif; color: #000000; font-weight: normal; }
+        </style>
+
+        <div class="sub-section" style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+        <div class="style-one">Enter position without reservation only after my edge is truly validated and my risk-stop is set in stone</div>
+        <div class="style-one">For now, my first entry: 1c pilot, then second & third entries: 1c each, ONLY on proven confirmation</div>
+        <div class="style-one">Cutting my losers quickly is a good business investment. Not doing so is suicidal wishfull thinking</div>
+        <div class="style-one">Beware of the <strong>SUNK COST FALLACY</strong>. Always consider future predicaments, not past investments</div>
+        <div class="style-one">One blown stop is variance, not a lost edge - could just be too early - re-assess only after a streak</div>
+        <div class="style-one">Several blown off stops could mean that I may have lost my edge, could be time to rethink my strategy</div>
+        <div class="style-one">Always beneficial to reconsider my approach - and objectively re-evaluate my bias and convictions</div>
+        <div class="style-one">It's essential to stay flexible and responsive - and adapt to continuously changing market conditions</div>
+        <div class="style-one">Trimming is critical for consistent financial success - one win at the time - as trading is a <strong>MARATHON</strong></div>
+        <div class="style-one">Not trimmming incrementally because of greed - the lure of more - will inevitably lead to losses</div>
+        <div class="style-one">Big bags can happen but not very often - Aim at incremental gains rather than shotting for the stars</div>
+        <div class="style-one">Maximum <strong>HARD</strong> loss per trade: $50 - Maximum loss per day: $250 - Maximum lossing streak: 5 trades</div>
+        <div class="style-two">&nbsp;</div>
+    </section>
+    
+    <!-- ============================ PAGE 6 - TBA ============================ -->
+   
+     <section class="page" id="6">
+        <style>
+            section[id="6"] .style-one { font-size: 3.1rem; font-family: Arial, sans-serif; color: #083a5e; font-weight: bold; }
+            section[id="6"] .style-two { font-size: 3.3rem; font-family: Arial, sans-serif; color: #083a5e; font-weight: bold; }
+            section[id="6"] .style-three { font-size: 2rem; font-family: Arial, sans-serif; color: #FFFFFF; font-weight: normal; }
+            section[id="6"] .style-four { font-size: 3.5rem; font-family: Arial, sans-serif; color: #083a5e; font-weight: bold; }
+            section[id="6"] .style-five { font-size: 2rem; font-family: Arial, sans-serif; color: #FFFFFF; font-weight: normal; }
+        </style>
+
+        <div class="sub-section" style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+        <div class="style-four">SCALE DOWN ON DRAWDOWN</div>
+        <div class="style-four">DO NOT REVENGE TRADE A LOSS</div>
+        <div class="style-four">TAKE A LOSS WITHOUT HESITATION</div>
+        <div class="style-four">TAKE PROFITS - TRIM PROGRESSIVELY</div>
+        <div class="style-four">DON'T FOCUS ON RUNAWAY TREND DAY</div>
+        <div class="style-four">DO NOT LET A LOSS AFFECT MY EMOTIONS</div>
+        <div class="style-three">&nbsp;</div>
+    </section>
+
+        <!-- ============================ PAGE 7 - TBA ============================ -->
+        <section class="page" id="7">
+            <style>
+                section[id="7"] .style-one { font-size: 3rem; font-family: 'Arial', sans-serif; color: #000000; font-weight: normal; }
+                section[id="7"] .style-two { font-size: 1rem; font-family: 'Arial', sans-serif; color: #000000; font-weight: normal; }
+                section[id="7"] .style-three { font-size: 1rem; font-family: 'Arial', sans-serif; color: #000000; font-weight: normal; }
+                section[id="7"] .style-four { font-size: 1rem; font-family: 'Arial', sans-serif; color: #000000; font-weight: normal; }
+                section[id="7"] .style-five { font-size: 1rem; font-family: 'Arial', sans-serif; color: #000000; font-weight: normal; }
+            </style>
+
+        <div class="sub-section" style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+        <div class="style-one">WAIT FOR ERIC'S INSTRUCTIONS</div>
+        <div class="style-one">SCALE UP CAREFULLY</div>
+        <div class="style-one">USE 1-2-3 POSITIONING</div>
+        <div class="style-one">ONLY ENTER 4 TO 6 POSITION IN LARGE PROFIT POSITION</div>
+        <div class="style-one">CUT LOSERS FASTER</div>
+        <div class="style-one">STOP TRADING AFTER ...</div>
+        <div class="style-three">&nbsp;</div>
+    </section>
+
+<!-- ============================ PAGE 8 - TBA ============================ -->
+    <section class="page" id="8">
+        <style>
+            section[id="8"] .style-one { font-size: 1.2rem; font-family: Arial, sans-serif; color: #083a5e; font-weight: normal; }
+            section[id="8"] .style-two { font-size: 2rem; font-family: Arial, sans-serif; color: #083a5e; font-weight: normal; }
+            section[id="8"] .style-three { font-size: 1rem; font-family: Arial, sans-serif; color: #000000; font-weight: normal; }
+            section[id="8"] .style-four { font-size: 1rem; font-family: Arial, sans-serif; color: #ff0000; font-weight: normal; }
+            section[id="8"] .style-five { font-size: 1rem; font-family: Arial, sans-serif; color: #000000; font-weight: normal; }
+        </style>
+
+    <div class="sub-section" style="display: flex; flex-direction: column; align-items: flex-start; margin-left: 0.1rem; gap: 0.5rem; text-align: left;">
+    <div class="style-two"><STRONg>THE SEVEN PRINCIPLES OF CONSISTENCY</STRONg></div>
+    <div class="style-one"><strong>Alignment:</strong> Ensure that daily actions, habits, and routines directly support your long-term objectives.</div>
+    <div class="style-one"><STROng>Rhythm:</STROng> Establish a predictable schedule or cadence to reduce decision fatigue and friction.</div>
+    <div class="style-one"><STRONg>Simplicity:</STRONg> Keep systems and goals streamlined so they are sustainable over extended periods.</div>
+    <div class="style-one"><STRONg>Accountability</STRONg> Track your progress transparently and measure output against established benchmarks.</div>
+    <div class="style-one"><strong>Adaptation:</strong> Adjust methods and tactical approaches when conditions change, while keeping the core objective stable.</div>
+    <div class="style-one"><strong>Patience:</strong> Focus on incremental compounding rather than immediate, short-term outcomes.</div>
+    <div class="style-one"><strong>Resilience:</strong> Maintain momentum and execute standard processes even through disruptions, fatigue, or setbacks.</div>
+    <div class="style-three">&nbsp;</div>
+    <div class="style-two"><STRONg>LES SEPT PRINCIPES DE COHERENCE</STRONg></div>
+    <div class="style-one"><strong>Discipline Opérationnelle (Operational Discipline) :</strong> Respecter rigoureusement les processus établis, même sous pression.</div>
+    <div class="style-one"><strong>Maîtrise Émotionnelle (Emotional Mastery) :</strong> Neutraliser les biais psychologiques pour maintenir une exécution objective.</div>
+    <div class="style-one"><strong>Rigueur Tactique (Tactical Rigor) :</strong> Appliquer systématiquement les règles d'engagement pour minimiser le risque.</div>
+    <div class="style-one"><strong>Adaptabilité Mesurée (Measured Adaptability) :</strong> Ajuster les stratégies en fonction des données réelles sans sacrifier les principes fondamentaux.</div>
+    <div class="style-one"><strong>Analyse Objective (Objective Analysis) :</strong> Évaluer les performances basées sur les données factuelles plutôt que sur les résultats immédiats.</div>
+    <div class="style-one"><strong>Patience Stratégique (Strategic Patience) :</strong> Privilégier la pérennité du système sur le gain à court terme.</div>
+    <div class="style-one"><strong>Amélioration Continue (Continuous Improvement) :</strong> Affiner constamment les protocoles pour éliminer les comportements contre-productifs.</div>
+
+        <div class="style-two">&nbsp;</div>
+    </section>
+
+    <!-- ============================ PAGE 9 - WHY ============================ -->
+    <section class="page" id="9">
+        <style>
+            section[id="9"] .style-one { font-size: 2rem; font-family: Arial Black, sans-serif; color: #083a5e; font-weight: normal; }
+            section[id="9"] .style-two { font-size: 2rem; font-family: Arial, sans-serif; color: #083a5e; font-weight: normal; }
+            section[id="9"] .style-three { font-size: 1.6rem; font-family: Arial, sans-serif; color: #083a5e; font-weight: normal; }
+            section[id="9"] .style-four { font-size: 2rem; font-family: Arial, sans-serif; color: #ff0000; font-weight: normal; }
+            section[id="9"] .style-five { font-size: 1rem; font-family: Arial, sans-serif; color: #000000; font-weight: normal; }
+        </style>
+
+        <div class="sub-section" style="display: flex; flex-direction: column; align-items: center; gap: 0.2rem;">
+        <div class="style-one">WHY DO I TRADE</div>
+        <div class="style-three">Reasons, Goals, Purpose and Motivations</div>
+        <div class="style-three">Professional and Financial Freedom and Independence</div>
+        <div class="style-three">Personal, Intellectual and Spiritual Development and Fulfilment</div>
+        <div class="style-three">Geo-Time Flexibility with Substantial Income and Wealth Accumulation</div>
+        <div class="style-three">Overcome my Self-Defeating Ego, Master my Psychology, Discipline and Patience</div>
+        <div class="style-three">Provide for my Kid’s Living, Lifestyle and Educational Expenses, and a Meaningful Inheritance</div>
+        <div class="style-three">Provide me with a Lavish & Pleasurable Lifestyle, Full of Activities, and a Comfortable Retirement</div>
+        <div class="style-four">&nbsp;</div>
+        <div class="style-one">POURQUOI JE TRADE</div>
+        <div class="style-three">Raisons, Objectifs, Intentions et Motivations</div>
+        <div class="style-three">Liberté et indépendance professionnelles et financières</div>
+        <div class="style-three">Épanouissement et développement personnel, intellectuel et spirituel</div>
+        <div class="style-three">Flexibilité géo-temporelle avec un revenu substantiel et une accumulation de patrimoine</div>
+        <div class="style-three">Surmonter mon ego autodestructeur, maîtriser ma psychologie, ma discipline et ma patience</div>
+        <div class="style-three">Fournir pour la vie, le mode de vie et les dépenses éducatives de mes enfants, et un héritage significatif</div>
+        <div class="style-three">Me fournir un mode et un style de vie luxueux et agréable, riche en activités, et une retraite confortable</div>
+        <div class="style-four">&nbsp;</div>
+
+        </div>
+    </section>
+
+    <!-- ============================ PAGE 10 - RULES ============================ -->
+    <section class="page" id="10">
+        <style>
+            section[id="10"] .style-one { font-size: 2.5rem; font-family: Arial, sans-serif; color: #083a5e; font-weight: normal; }
+            section[id="10"] .style-two { font-size: 1.333rem; font-family: Arial, sans-serif; color: #FFFFFF; font-weight: normal; }
+            section[id="10"] .style-three { font-size: 1rem; font-family: Arial, sans-serif; color: #000000; font-weight: normal; }
+            section[id="10"] .style-four { font-size: 1rem; font-family: Arial, sans-serif; color: #FFFFFF; font-weight: normal; }
+            section[id="10"] .style-five { font-size: 1rem; font-family: Arial, sans-serif; color: #000000; font-weight: normal; }
+        </style>
+
+        <div class="sub-section" style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+        <div class="style-one">Buy low, Sell high | Buy high, Sell higher, Sell low, Buy lower</div>
+        <div class="style-one">Let your Profits Run  -  Cut your Losses Very Quickly</div>
+        <div class="style-one">Add to your Winners  -  Never Ever to your Losers</div>
+        <div class="style-one">Go with the Trend - The Trend is your Friend</div>
+        <div class="style-one">Focus on the Process - Not the Outcome</div>
+        <div class="style-one">Respect Position Sizes, Stops & Trims</div>
+        <div class="style-one">Trading is a Marathon, Not a Sprint</div>
+        <div class="style-one">My Mind is my Greatest Asset</div>
+        <div class="style-one">Risk what I can Afford to Lose</div>
+        <div class="style-two">&nbsp;</div>
+    </section>
+
+    <!-- ============================ PAGE 11 - TRUTHS ============================ -->
+    <section class="page" id="11">
+        <style>
+            section[id="11"] .style-one { font-size: 1.6rem; font-family: Arial, sans-serif; color: #083a5e; font-weight: normal; }
+            section[id="11"] .style-two { font-size: 2rem; font-family: Arial, sans-serif; color: #FFFFFF; font-weight: normal; }
+            section[id="11"] .style-three { font-size: 3rem; font-family: Arial, sans-serif; color: #FFFFFF; font-weight: normal; }
+            section[id="11"] .style-four { font-size: 1rem; font-family: Arial, sans-serif; color: #FFFFFF; font-weight: normal; }
+            section[id="11"] .style-five { font-size: 2rem; font-family: Arial Black, sans-serif; color: #083a5e; font-weight: normal; }
+        </style>
+
+        <div class="sub-section" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+        <div class="style-five">THE FIVE FUNDAMENTAL TRUTHS</div>
+        <div class="style-one">Anything can happen</div>
+        <div class="style-one">You don't need to know what is going to happen next in order to make money</div>
+        <div class="style-one">There is a random distribution between wins & losses for any given set of variables that define an edge</div>
+        <div class="style-one">An edge is nothing more than an indication of a higher probability of one thing happening over another</div>
+        <div class="style-one">Every moment in the market is unique</div>
+        <div class="style-three">&nbsp;</div>
+        <div class="style-five">LES CINQ VERITES FUNDAMENTALES</div>
+        <div class="style-one">Tout peut arriver</div>
+        <div class="style-one">Vous n'avez pas besoin de savoir ce qui va se passer ensuite pour gagner de l'argent</div>
+        <div class="style-one">Il existe une distribution aléatoire entre les gains et les pertes<br>pour tout ensemble donné de variables définissant un avantage</div>
+        <div class="style-one">Un avantage n'est rien de plus qu'une indication d'une probabilité plus élevée<br>qu'une chose se produise par rapport à une autre</div>
+        <div class="style-one">Chaque moment sur le marché est unique</div>
+        <div class="style-four">&nbsp;</div>
+    </section>
+
+    <!-- ============================ PAGE 12 - PRINCIPLES ============================ -->
+    <section class="page" id="12">
+        <style>
+            section[id="12"] .style-one { font-size: 1.5rem; font-family: Arial, sans-serif; color: #083a5e; font-weight: normal; }
+            section[id="12"] .style-two { font-size: 1rem; font-family: Arial, sans-serif; color: #FFFFFF; font-weight: normal; }
+            section[id="12"] .style-three { font-size: 2.8rem; font-family: Arial, sans-serif; color: #FFFFFF; font-weight: normal; }
+            section[id="12"] .style-four { font-size: 2rem; font-family: Arial Black, sans-serif; color: #083a5e; font-weight: normal; }
+            section[id="12"] .style-five { font-size: 1rem; font-family: Arial, sans-serif; color: #FFFFFF; font-weight: normal; }
+        </style>
+
+        <div class="sub-section" style="display: flex; flex-direction: column; align-items: center; gap: 0.3rem;">
+        <div class="style-four">THE SEVEN PRINCIPLES OF CONSISTENCY</div>
+        <div class="style-one">I objectively identify my edges</div>
+        <div class="style-one">I predefine the risk of every trade</div>
+        <div class="style-one">I completely accept the risk, or I am willing to let go of the trade</div>
+        <div class="style-one">I act on my edges without reservation or hesitation</div>
+        <div class="style-one">I pay myself as the market makes money available to me</div>
+        <div class="style-one">I continually monitor my susceptibility for making errors</div>
+        <div class="style-one">I understand the absolute necessity of these principles of consistency, and therefore, I never violate them</div>
+        <div class="style-three">&nbsp;</div>
+        <div class="style-four">LES SEPT PRINCIPES DE COHERENCE</div>
+        <div class="style-one">J'identifie objectivement mes avantages</div>
+        <div class="style-one">Je prédéfinis le risque de chaque transaction</div>
+        <div class="style-one">J'accepte complètement le risque, ou je suis prêt à abandonner la transaction</div>
+        <div class="style-one">J'execute mes avantages sans réserve ni hésitation</div>
+        <div class="style-one">Je me rémunère au fur et à mesure que le marché met de l'argent à ma disposition</div>
+        <div class="style-one">Je surveille continuellement ma vulnerabilité à commettre des erreurs</div>
+        <div class="style-one">Je comprends la nécessité absolue de ces principes de coherence, et par conséquent, je ne les viole jamais</div>
+        <div class="style-two">&nbsp;</div>
+    </section>
+
+    <script>
+        (function () {
+            const PAGES = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+            const TITLES = { '1': 'MOTIVATE', '2': 'JR2', '3': 'JR3', '4': 'JR4', '5': 'JR5', '6': 'JR6', '7': 'JR7', '8': 'JR8', '9': 'JR9', '10': 'JR10', '11': 'JR11', '12': 'JR12' };
+
+            const btn = document.getElementById('menuBtn');
+            const prevBtn = document.getElementById('prevPageBtn');
+            const nextBtn = document.getElementById('nextPageBtn');
+            const indicator = document.getElementById('pageIndicator');
+            const panel = document.getElementById('navPanel');
+            const scrim = document.getElementById('navScrim');
+            const links = panel.querySelectorAll('a');
+
+            function setOpen(open) {
+                panel.classList.toggle('open', open);
+                scrim.classList.toggle('open', open);
+                btn.setAttribute('aria-expanded', open);
+                btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+            }
+
+            function route() {
+
+                let id = decodeURIComponent(location.hash.replace('#', ''));
+                if (PAGES.indexOf(id) === -1) id = '1';
+                PAGES.forEach(function (p) {
+                    document.getElementById(p).classList.toggle('active', p === id);
+                });
+                links.forEach(function (a) {
+                    a.classList.toggle('current', a.getAttribute('href') === '#' + id);
+                });
+                document.title = TITLES[id];
+                indicator.textContent = id;
+                window.scrollTo(0, 0);
+                setOpen(false);
+            }
+
+            btn.addEventListener('click', function () {
+                setOpen(!panel.classList.contains('open'));
+            });
+            function currentIndex() {
+                const id = decodeURIComponent(location.hash.replace('#', ''));
+                const idx = PAGES.indexOf(id);
+                return idx === -1 ? 0 : idx;
+            }
+            prevBtn.addEventListener('click', function () {
+                const idx = currentIndex();
+                location.hash = PAGES[(idx - 1 + PAGES.length) % PAGES.length];
+            });
+            nextBtn.addEventListener('click', function () {
+                const idx = currentIndex();
+                location.hash = PAGES[(idx + 1) % PAGES.length];
+            });
+            scrim.addEventListener('click', function () { setOpen(false); });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') setOpen(false);
+            });
+            window.addEventListener('hashchange', route);
+            route();
+        })();
+    </script>
+
+    <!--
+    Font-weight numeric values (multiples of 100, if the font has those weights available):
+    100 Thin, 200 Extra Light, 300 Light, 400 Normal, 500 Medium, 600 Semi Bold, 700 Bold, 800 Extra Bold, 900 Black
+    Note: most fonts (including Calibri/Arial as loaded here) only actually ship a couple of real weights (e.g. 400 and 700)
+    Intermediate numeric values will just snap to the nearest weight the font provides, or fall back to normal/bold.
+
+    use CTRL+/ to insert this kind of note
+    SHFT+ALT+Up/DownArrow to duplicate line
+    ALT+Up/DownArrow to move line
+    -->
+    
+
+</body>
+</html>

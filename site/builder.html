@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300b050' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8'/><path d='M12 18V6'/></svg>">
+    <title>PAGE BUILDER</title>
+    <link rel="stylesheet" href="css/motivate.css">
+    <style>
+        body { font-family: Arial, sans-serif; color: #000000; }
+        .builder {
+            width: min(100%, 80rem);
+            margin: 0 auto;
+            padding: 4.5rem 16px 3rem;
+            text-align: left;
+        }
+        .builder h1 {
+            margin: 0 0 1.2rem;
+            text-align: center;
+            font-family: 'Arial Black', sans-serif;
+            font-weight: normal;
+            font-size: 2.6rem;
+            color: #083a5e;
+        }
+        .builder h1 span { color: #0070c0; }
+        .banner {
+            display: none;
+            margin: 0 0 1rem;
+            padding: 0.6rem 1rem;
+            border: 2px solid #ff0000;
+            border-radius: 0.6rem;
+            color: #ff0000;
+            font-size: 1rem;
+        }
+        .banner.show { display: block; }
+        .card {
+            border: 2px solid #000000;
+            border-radius: 0.6rem;
+            padding: 0.9rem 1.1rem;
+            margin-bottom: 1rem;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.6rem 1.4rem;
+        }
+        .row + .row { margin-top: 0.7rem; }
+        .field { display: flex; align-items: center; gap: 0.5rem; font-size: 1rem; }
+        .field > span:first-child { min-width: 9.5rem; font-weight: bold; }
+        .hint { font-size: 0.9rem; color: #083a5e; }
+        input, select {
+            font-family: Arial, sans-serif;
+            font-size: 1rem;
+            color: #000000;
+            border: 1px solid #000000;
+            border-radius: 0.3rem;
+            padding: 0.25rem 0.4rem;
+            background: #ffffff;
+        }
+        input:disabled { background: #f0f0f0; color: #888888; }
+        input:focus-visible, select:focus-visible { outline: 2px solid #0070c0; outline-offset: 1px; }
+        input[type="number"] { width: 5rem; }
+        input[type="color"] { width: 3rem; height: 1.9rem; padding: 0.1rem; }
+        #pageName { width: 18rem; }
+
+        /* New / Edit mode switch */
+        .mode { display: inline-flex; border: 2px solid #000000; border-radius: 0.6rem; overflow: hidden; }
+        .mode label { display: block; cursor: pointer; }
+        .mode input { position: absolute; opacity: 0; pointer-events: none; }
+        .mode span { display: block; padding: 0.35rem 1.1rem; font-size: 1rem; }
+        .mode label + label span { border-left: 2px solid #000000; }
+        .mode input:checked + span { background: #000000; color: #ffffff; }
+        .mode input:focus-visible + span { outline: 2px solid #0070c0; outline-offset: -4px; }
+
+        .lines-wrap { overflow-x: auto; }
+        table.lines { width: 100%; border-collapse: collapse; font-size: 1rem; }
+        table.lines th {
+            text-align: left;
+            font-weight: bold;
+            padding: 0.3rem 0.35rem;
+            border-bottom: 2px solid #000000;
+            white-space: nowrap;
+        }
+        table.lines td { padding: 0.2rem 0.35rem; white-space: nowrap; }
+        table.lines td:first-child { text-align: right; font-weight: bold; width: 2rem; }
+        table.lines td.text-cell { width: 100%; }
+        table.lines input.text { width: 100%; min-width: 16rem; }
+        .icon-btn {
+            width: 1.8rem;
+            height: 1.8rem;
+            padding: 0;
+            border: 1px solid #000000;
+            border-radius: 50%;
+            background: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            font-size: 1rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+        .icon-btn:hover:not(:disabled) { background: #f0f0f0; }
+        .icon-btn.delete:hover:not(:disabled) { color: #ff0000; border-color: #ff0000; }
+        .icon-btn:disabled { color: #aaaaaa; border-color: #aaaaaa; cursor: default; }
+        .icon-btn:focus-visible { outline: 2px solid #0070c0; outline-offset: 2px; }
+        .lines-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.4rem; margin-top: 0.7rem; }
+
+        .status {
+            min-height: 1.5rem;
+            margin: 1rem 0 0.4rem;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #00b050;
+        }
+        .status.error { color: #ff0000; }
+        .buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.8rem 1.4rem; }
+        .btn {
+            min-width: 9rem;
+            padding: 0.45rem 1rem;
+            border: 2px solid #000000;
+            border-radius: 0.6rem;
+            background: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .btn.small { min-width: 0; font-size: 1rem; padding: 0.3rem 0.9rem; }
+        .btn:hover:not(:disabled) { background: #f0f0f0; }
+        .btn:disabled { color: #aaaaaa; border-color: #aaaaaa; cursor: default; }
+        .btn:focus-visible { outline: 2px solid #0070c0; outline-offset: 3px; }
+    </style>
+</head>
+<body data-page="builder">
+
+    <!-- ============================ PAGE BUILDER ============================ -->
+    <main class="builder">
+        <h1>PAGE <span>BUILDER</span></h1>
+
+        <div class="banner" id="banner">
+            The page builder needs the MOTIVATE server: open MOTIVATE with its shortcut
+            (MOTIVATE.lnk), then click the A button again. LOAD, PREVIEW and CREATE / SAVE are disabled.
+        </div>
+
+        <form id="builderForm" autocomplete="off">
+            <div class="card">
+                <div class="row">
+                    <span class="field"><span>Mode</span></span>
+                    <div class="mode" role="radiogroup" aria-label="Mode">
+                        <label><input type="radio" name="mode" value="new" checked><span>New Page</span></label>
+                        <label><input type="radio" name="mode" value="edit"><span>Edit Existing Page</span></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="field"><span id="numberLabel">Page Number</span>
+                        <input type="number" id="pageNumber" min="1" step="1" required></label>
+                    <button type="button" class="btn small" id="loadBtn" hidden>LOAD</button>
+                    <span class="hint" id="numberHint"></span>
+                </div>
+                <div class="row">
+                    <label class="field"><span>Page Name</span>
+                        <input type="text" id="pageName" maxlength="40" placeholder="e.g. Patience" required></label>
+                    <span class="hint">Shown in the menu and on the home page box</span>
+                </div>
+                <div class="row">
+                    <label class="field"><span>Horizontal Align</span>
+                        <select id="hAlign">
+                            <option>Center</option><option>Left</option><option>Right</option>
+                        </select></label>
+                    <label class="field">Indent
+                        <input type="number" id="hIndent" min="0" max="50" step="0.5" value="0"></label>
+                </div>
+                <div class="row">
+                    <label class="field"><span>Vertical Align</span>
+                        <select id="vAlign">
+                            <option>Middle</option><option>Top</option><option>Bottom</option>
+                        </select></label>
+                    <label class="field">Indent
+                        <input type="number" id="vIndent" min="0" max="50" step="0.5" value="0"></label>
+                    <span class="hint">Sizes, indents and spacing are in rem (1 rem &asymp; normal text height)</span>
+                </div>
+            </div>
+
+            <div class="card lines-wrap">
+                <table class="lines">
+                    <thead>
+                        <tr><th>#</th><th>Line Text</th><th>Font</th><th>Size</th><th>Font Type</th><th>Color</th><th>Spacing After</th><th><span class="hint">Add / Delete</span></th></tr>
+                    </thead>
+                    <tbody id="lineRows"></tbody>
+                </table>
+                <div class="lines-foot">
+                    <button type="button" class="btn small" id="addLineBtn">ADD LINE</button>
+                    <span class="hint" id="lineCount"></span>
+                    <span class="hint">Text may use &lt;strong&gt;bold&lt;/strong&gt;, &lt;em&gt;italic&lt;/em&gt;, &lt;br&gt; (new line) and &amp;nbsp; (blank spacer line)</span>
+                </div>
+            </div>
+
+            <div class="status" id="status" role="status"></div>
+            <div class="buttons">
+                <button type="button" class="btn" id="previewBtn">PREVIEW</button>
+                <button type="button" class="btn" id="saveBtn">CREATE</button>
+                <button type="button" class="btn" id="resetBtn">RESET</button>
+                <button type="button" class="btn" id="exitBtn">EXIT</button>
+            </div>
+        </form>
+
+        <datalist id="palette">
+            <option value="#083a5e"></option><option value="#0070c0"></option><option value="#ff0000"></option>
+            <option value="#00b050"></option><option value="#000000"></option><option value="#ffffff"></option>
+        </datalist>
+    </main>
+
+    <script src="js/nav.js"></script>
+    <script>
+        (function () {
+            const MAX_LINES = 20;
+            const START_LINES = 3;
+            const FONTS = ['Arial', 'Arial Black', 'Calibri', 'Segoe UI', 'Tahoma', 'Verdana',
+                           'Georgia', 'Times New Roman', 'Courier New'];
+            const TYPES = ['Normal', 'Bold', 'Italic', 'Bold Italic'];
+            const LINE_DEFAULT = { text: '', font: 'Arial Black', size: 3, font_type: 'Normal',
+                                   color: '#083a5e', space_after: 0.5 };
+            const DRAFT_KEY = 'motivate-builder-draft';
+
+            const pages = window.MOTIVATE_PAGES.filter(function (p) { return p.id !== '0'; });
+            const last = pages.length;
+            const $ = function (id) { return document.getElementById(id); };
+            const form = $('builderForm');
+            const tbody = $('lineRows');
+            const statusEl = $('status');
+            const online = location.protocol === 'http:';
+            const params = new URLSearchParams(location.search);
+
+            let busy = false;
+            let dirty = false;
+            let loadedNumber = null;     // edit mode: page currently in the form
+
+            function mode() { return form.querySelector('input[name="mode"]:checked').value; }
+
+            // ---------- Line rows (add / delete) ----------
+            function options(list) {
+                return list.map(function (v) { return '<option>' + v + '</option>'; }).join('');
+            }
+
+            function makeRow(line) {
+                const tr = document.createElement('tr');
+                tr.innerHTML =
+                    '<td></td>' +
+                    '<td class="text-cell"><input class="text" type="text" maxlength="500"></td>' +
+                    '<td><select class="font">' + options(FONTS) + '</select></td>' +
+                    '<td><input class="size" type="number" min="0.5" max="20" step="0.1"></td>' +
+                    '<td><select class="font_type">' + options(TYPES) + '</select></td>' +
+                    '<td><input class="color" type="color" list="palette"></td>' +
+                    '<td><input class="space_after" type="number" min="0" max="20" step="0.1"></td>' +
+                    '<td><button type="button" class="icon-btn add" title="Add a line below">+</button> ' +
+                    '<button type="button" class="icon-btn delete" title="Delete this line">&times;</button></td>';
+                setLine(tr, line);
+                return tr;
+            }
+
+            function setLine(tr, line) {
+                const full = Object.assign({}, LINE_DEFAULT, line || {});
+                Object.keys(LINE_DEFAULT).forEach(function (k) {
+                    tr.querySelector('.' + k).value = full[k];
+                });
+            }
+
+            function getLine(tr) {
+                const line = {};
+                Object.keys(LINE_DEFAULT).forEach(function (k) {
+                    line[k] = tr.querySelector('.' + k).value;
+                });
+                return line;
+            }
+
+            function rows() { return Array.prototype.slice.call(tbody.rows); }
+
+            // A new line copies the style of the line above it, with empty text.
+            function styleFrom(tr) {
+                return tr ? Object.assign(getLine(tr), { text: '' }) : null;
+            }
+
+            function addLine(afterRow) {
+                if (rows().length >= MAX_LINES) return;
+                const ref = afterRow || tbody.lastElementChild;
+                const tr = makeRow(styleFrom(ref));
+                tbody.insertBefore(tr, ref ? ref.nextSibling : null);
+                renumberRows();
+                tr.querySelector('.text').focus();
+                changed();
+            }
+
+            function deleteLine(tr) {
+                if (rows().length <= 1) return;
+                const text = tr.querySelector('.text').value.trim();
+                if (text && !confirm('Delete line ' + tr.cells[0].textContent + '?\n\n' + text)) return;
+                const next = tr.nextElementSibling || tr.previousElementSibling;
+                tr.remove();
+                renumberRows();
+                if (next) next.querySelector('.text').focus();
+                changed();
+            }
+
+            function renumberRows() {
+                const all = rows();
+                all.forEach(function (tr, i) {
+                    const n = i + 1;
+                    tr.cells[0].textContent = n;
+                    [['text', 'text'], ['font', 'font'], ['size', 'font size'], ['font_type', 'font type'],
+                     ['color', 'font color'], ['space_after', 'spacing after']].forEach(function (pair) {
+                        tr.querySelector('.' + pair[0]).setAttribute('aria-label', 'Line ' + n + ' ' + pair[1]);
+                    });
+                    tr.querySelector('.add').setAttribute('aria-label', 'Add a line below line ' + n);
+                    tr.querySelector('.delete').setAttribute('aria-label', 'Delete line ' + n);
+                    tr.querySelector('.add').disabled = all.length >= MAX_LINES;
+                    tr.querySelector('.delete').disabled = all.length <= 1;
+                });
+                $('addLineBtn').disabled = all.length >= MAX_LINES;
+                $('lineCount').textContent = all.length + ' of ' + MAX_LINES + ' lines';
+            }
+
+            function setLines(lines) {
+                tbody.innerHTML = '';
+                const list = lines && lines.length ? lines.slice(0, MAX_LINES) : [];
+                while (list.length < (lines && lines.length ? 0 : START_LINES)) list.push(null);
+                list.forEach(function (line) { tbody.appendChild(makeRow(line)); });
+                renumberRows();
+            }
+
+            tbody.addEventListener('click', function (e) {
+                const b = e.target.closest('button');
+                if (!b) return;
+                const tr = b.closest('tr');
+                if (b.classList.contains('add')) addLine(tr);
+                else if (b.classList.contains('delete')) deleteLine(tr);
+            });
+            $('addLineBtn').addEventListener('click', function () { addLine(null); });
+
+            // ---------- Read / write the form ----------
+            function getSpec() {
+                return {
+                    number: $('pageNumber').value,
+                    name: $('pageName').value,
+                    h_align: $('hAlign').value,
+                    h_indent: $('hIndent').value,
+                    v_align: $('vAlign').value,
+                    v_indent: $('vIndent').value,
+                    lines: rows().map(getLine)
+                };
+            }
+
+            function setSpec(spec) {
+                $('pageNumber').value = spec.number;
+                $('pageName').value = spec.name || '';
+                $('hAlign').value = spec.h_align || 'Center';
+                $('hIndent').value = spec.h_indent || 0;
+                $('vAlign').value = spec.v_align || 'Middle';
+                $('vIndent').value = spec.v_indent || 0;
+                setLines(spec.lines);
+                dirty = false;
+                refresh();
+            }
+
+            function cameFrom() {
+                const at = parseInt(params.get('at'), 10);
+                return at >= 1 && at <= last + 1 ? at : last + 1;
+            }
+
+            function refresh() {
+                const editing = mode() === 'edit';
+                const k = parseInt($('pageNumber').value, 10);
+                const top = editing ? last : last + 1;
+                $('pageNumber').max = top;
+                $('numberLabel').textContent = editing ? 'Page to Edit' : 'Page Number';
+                $('loadBtn').hidden = !editing;
+                $('saveBtn').textContent = editing ? 'SAVE' : 'CREATE';
+                $('hIndent').disabled = $('hAlign').value === 'Center';
+                $('vIndent').disabled = $('vAlign').value === 'Middle';
+
+                const hint = $('numberHint');
+                if (!(k >= 1 && k <= top)) {
+                    hint.textContent = 'Choose 1 to ' + top;
+                } else if (editing) {
+                    hint.textContent = loadedNumber === k
+                        ? 'Editing ' + k + ' - ' + pages[k - 1].label.toUpperCase()
+                        : 'Click LOAD to edit ' + k + ' - ' + pages[k - 1].label.toUpperCase();
+                } else if (k === last + 1) {
+                    hint.textContent = 'Added at the end (after ' + last + ' - ' + pages[last - 1].label.toUpperCase() + ')';
+                } else {
+                    hint.textContent = 'Inserted before ' + k + ' - ' + pages[k - 1].label.toUpperCase() +
+                        '; pages ' + k + '-' + last + ' become ' + (k + 1) + '-' + (last + 1);
+                }
+                const ready = online && !busy;
+                $('loadBtn').disabled = !ready;
+                $('previewBtn').disabled = !ready || (editing && loadedNumber === null);
+                $('saveBtn').disabled = !ready || (editing && loadedNumber !== k);
+            }
+
+            function changed() {
+                dirty = true;
+                refresh();
+                if (mode() === 'new') saveDraft();
+            }
+
+            function saveDraft() {
+                try { localStorage.setItem(DRAFT_KEY, JSON.stringify(getSpec())); } catch (e) { /* storage unavailable */ }
+            }
+
+            function loadDraft() {
+                try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (e) { return null; }
+            }
+
+            function clearDraft() {
+                try { localStorage.removeItem(DRAFT_KEY); } catch (e) { /* storage unavailable */ }
+            }
+
+            function setStatus(text, isError) {
+                statusEl.textContent = text;
+                statusEl.classList.toggle('error', !!isError);
+            }
+
+            function setBusy(value) {
+                busy = value;
+                refresh();
+            }
+
+            // ---------- Server calls ----------
+            // An HTML answer means an older MOTIVATE server without this action is still running.
+            function readJson(r) {
+                return r.json().catch(function () {
+                    throw new Error('The MOTIVATE server is out of date - double-click the MOTIVATE shortcut to restart it');
+                });
+            }
+
+            function post(action, spec) {
+                return fetch('/api/' + action, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(spec)
+                }).then(readJson);
+            }
+
+            function loadPage(k) {
+                if (dirty && loadedNumber !== null && !confirm('Discard your changes to page ' + loadedNumber + '?')) return;
+                setBusy(true);
+                setStatus('Loading page ' + k + '...');
+                fetch('/api/page?n=' + encodeURIComponent(k), { cache: 'no-store' })
+                    .then(readJson)
+                    .then(function (res) {
+                        if (!res.ok) throw new Error(res.error);
+                        loadedNumber = res.spec.number;
+                        setSpec(res.spec);
+                        setStatus('Loaded ' + k + ' - ' + res.spec.name.toUpperCase() + ' (' + res.spec.lines.length + ' lines)');
+                    })
+                    .catch(function (err) { setStatus(err.message || 'Load failed', true); })
+                    .finally(function () { setBusy(false); });
+            }
+
+            function preview() {
+                setBusy(true);
+                setStatus('Building preview...');
+                post('preview', getSpec()).then(function (res) {
+                    if (!res.ok) throw new Error(res.error);
+                    window.open('_preview.html?t=' + Date.now(), 'motivate_preview');
+                    setStatus('Preview opened in its own tab');
+                }).catch(function (err) {
+                    setStatus(err.message || 'Preview failed', true);
+                }).finally(function () { setBusy(false); });
+            }
+
+            function save() {
+                const spec = getSpec();
+                const k = parseInt(spec.number, 10);
+                const editing = mode() === 'edit';
+                let question = null;
+                if (editing) {
+                    question = 'Save changes to page ' + k + ' - ' + pages[k - 1].label.toUpperCase() + '?';
+                    if (spec.name.trim() !== pages[k - 1].label) {
+                        question += '\n\nThe page is renamed "' + spec.name.trim() + '" (file, menu and home box).';
+                    }
+                } else if (k >= 1 && k <= last) {
+                    question = 'Insert "' + spec.name.trim() + '" as page ' + k + '?\n\n' +
+                        'Pages ' + k + '-' + last + ' will be renumbered ' + (k + 1) + '-' + (last + 1) + '.';
+                }
+                if (question && !confirm(question + '\nA backup of the site is saved first.')) return;
+                setBusy(true);
+                setStatus((editing ? 'Saving page ' : 'Creating page ') + k + '...');
+                post(editing ? 'update' : 'create', spec).then(function (res) {
+                    if (!res.ok) throw new Error(res.error);
+                    if (!editing) clearDraft();
+                    dirty = false;
+                    setStatus((editing ? 'Saved ' : 'Created ') + res.file);
+                    location.href = res.file;
+                }).catch(function (err) {
+                    setStatus(err.message || 'Save failed', true);
+                    setBusy(false);
+                });
+            }
+
+            // ---------- Modes ----------
+            function startNew() {
+                loadedNumber = null;
+                const draft = loadDraft();
+                setSpec(draft ? Object.assign(draft, { number: cameFrom() }) : { number: cameFrom(), lines: [] });
+                setStatus('');
+            }
+
+            function startEdit(k) {
+                loadedNumber = null;
+                setSpec({ number: k, lines: [] });
+                setStatus('');
+                if (online) loadPage(k);
+            }
+
+            form.addEventListener('change', function (e) {
+                if (e.target.name === 'mode') {
+                    if (dirty && mode() === 'new' && loadedNumber !== null && !confirm('Leave page ' + loadedNumber + ' without saving your changes?')) {
+                        form.querySelector('input[value="' + (mode() === 'edit' ? 'new' : 'edit') + '"]').checked = true;
+                        return;
+                    }
+                    if (mode() === 'edit') startEdit(Math.min(Math.max(cameFrom() - 1, 1), last));
+                    else startNew();
+                    return;
+                }
+                if (e.target.id === 'pageNumber' && mode() === 'edit') {
+                    refresh();
+                    return;
+                }
+                changed();
+            });
+            form.addEventListener('input', function (e) {
+                if (e.target.name === 'mode') return;
+                if (e.target.id === 'pageNumber') refresh();
+                else changed();
+            });
+            form.addEventListener('submit', function (e) { e.preventDefault(); });
+            $('pageNumber').addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && mode() === 'edit') loadPage(parseInt(this.value, 10));
+            });
+            $('loadBtn').addEventListener('click', function () { loadPage(parseInt($('pageNumber').value, 10)); });
+            $('previewBtn').addEventListener('click', preview);
+            $('saveBtn').addEventListener('click', save);
+            $('resetBtn').addEventListener('click', function () {
+                if (mode() === 'edit') {
+                    if (loadedNumber !== null && confirm('Undo all changes and reload page ' + loadedNumber + '?')) {
+                        dirty = false;
+                        loadPage(loadedNumber);
+                    }
+                } else if (confirm('Clear the form?')) {
+                    clearDraft();
+                    setSpec({ number: cameFrom(), lines: [] });
+                    setStatus('');
+                }
+            });
+            $('exitBtn').addEventListener('click', function () {
+                if (dirty && mode() === 'edit' && !confirm('Leave without saving?')) return;
+                if (document.referrer && history.length > 1) history.back();
+                else location.href = 'index.html';
+            });
+
+            // ---------- Start (builder.html?at=N = new page / builder.html?edit=N = edit page N) ----------
+            if (!online) $('banner').classList.add('show');
+            const editAt = parseInt(params.get('edit'), 10);
+            if (editAt >= 1 && editAt <= last) {
+                form.querySelector('input[value="edit"]').checked = true;
+                startEdit(editAt);
+            } else {
+                startNew();
+            }
+            if (online) {
+                fetch('/api/ping', { cache: 'no-store' }).catch(function () {
+                    $('banner').classList.add('show');
+                    setBusy(true);
+                });
+            }
+            $('pageName').focus();
+        })();
+    </script>
+</body>
+</html>
