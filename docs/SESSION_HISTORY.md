@@ -93,6 +93,9 @@ Session ID: 6f5aa24e-4d19-443e-96a9-19f052c264c5 (transcript: `docs\sessions\202
   config.json auto_upload (default true); server API_VERSION 3 (launcher replaces the running v2 server).
 - ws = website added to the global CLAUDE.md abbreviations.
 
+- Fix: the OK-notice edit put real line breaks inside a JS string; builder.html script failed (no LOAD, no lines). Replaced with 
+.
+
 **Open items**
 - Tests and shortcut launch: awaiting JR's authorization
 - Possible spelling fixes in original text (LOOSER, SUNK CURSE, wishfull, trimmming, shotting, lossing) - not changed

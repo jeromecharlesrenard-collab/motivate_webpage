@@ -491,9 +491,7 @@
                     dirty = false;
                     setStatus((editing ? 'Saved ' : 'Created ') + res.file);
                     if (res.upload) {
-                        alert((editing ? 'Saved ' : 'Created ') + res.file + '.
-
-' +
+                        alert((editing ? 'Saved ' : 'Created ') + res.file + '.\n\n' +
                             (res.upload.ok ? '' : 'NOT uploaded to GitHub - ') + res.upload.message);
                     }
                     location.href = res.file;
