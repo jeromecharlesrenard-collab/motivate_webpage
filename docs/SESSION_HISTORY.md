@@ -85,6 +85,14 @@ Session ID: 6f5aa24e-4d19-443e-96a9-19f052c264c5 (transcript: `docs\sessions\202
 - GitHub: public repo github.com/jeromecharlesrenard-collab/motivate_webpage; .gitignore (same rules as
   knowledge_bank + old archive HTML + site/_preview.html), .gitattributes, README.md.
 
+**Follow-up 7 - website + auto upload (2026-10-29)**
+- Website: GitHub Pages (build_type workflow) via .github\workflows\pages.yml, publishing site\ to
+  https://jeromecharlesrenard-collab.github.io/motivate_webpage/ on every push to main. No A button on https.
+- Auto upload: app\github_sync.py; after every builder CREATE / SAVE the server runs git add -A / commit /
+  push (no window, no prompt, 60 s limit) and the builder shows an OK notice with the result.
+  config.json auto_upload (default true); server API_VERSION 3 (launcher replaces the running v2 server).
+- ws = website added to the global CLAUDE.md abbreviations.
+
 **Open items**
 - Tests and shortcut launch: awaiting JR's authorization
 - Possible spelling fixes in original text (LOOSER, SUNK CURSE, wishfull, trimmming, shotting, lossing) - not changed

@@ -84,7 +84,8 @@
     scrim.id = 'navScrim';
 
     const controls = [btn, indicator, toggles, panel, scrim];
-    if (currentId !== 'builder') {
+    // No A button on the website (https): the builder needs the local MOTIVATE server.
+    if (currentId !== 'builder' && location.protocol !== 'https:') {
         const builderBtn = document.createElement('a');
         builderBtn.className = 'builder-btn';
         builderBtn.href = 'builder.html?at=' + (known ? Number(page.id) + 1 : PAGES.length);

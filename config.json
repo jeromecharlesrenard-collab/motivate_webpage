@@ -2,5 +2,6 @@
     "log_level": "INFO",
     "start_page": "index.html",
     "port": 8765,
-    "idle_minutes": 120
+    "idle_minutes": 120,
+    "auto_upload": true
 }

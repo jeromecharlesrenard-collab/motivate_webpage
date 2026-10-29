@@ -9,11 +9,13 @@ which also powers the in-page PAGE BUILDER (black "A" circle, bottom right of ev
 ```
 motivate_webpage\
   README.md, .gitignore    GitHub: github.com/jeromecharlesrenard-collab/motivate_webpage (public)
+  .github\workflows\pages.yml   publishes site\ to https://jeromecharlesrenard-collab.github.io/motivate_webpage/
   MOTIVATE.lnk             shortcut -> .venv\Scripts\pythonw.exe main.py
   main.py                  entry point: logging, config, starts server, opens site\<start_page>
   app\launcher.py          config, EDT logging, error dialogs, open-in-browser / server start
   app\server.py            local HTTP server: serves site\; GET /api/ping, /api/page?n=N;
                            POST /api/preview, /api/create, /api/update, /api/shutdown
+  app\github_sync.py       git add/commit/push after every builder CREATE / SAVE (auto_upload)
   app\page_builder.py      builder logic: validate spec, render page, insert + renumber,
                            load existing page (parses original style-x and builder line-N pages), edit, backup
   site\                    THE WEBPAGE (multi-page version)
@@ -52,6 +54,7 @@ motivate_webpage\
 - `start_page`: file in site\ opened by the launcher (default index.html; invalid -> index.html)
 - `port`: local server port (default 8765)
 - `idle_minutes`: server stops after this long with no requests (default 120; open pages ping every minute)
+- `auto_upload`: true = every builder CREATE / SAVE is committed and pushed to GitHub (OK notice shows the result)
 
 ## Conventions
 - Each page: `<body data-page="N">`, links `css/motivate.css` and `js/nav.js`; page-specific
@@ -70,4 +73,5 @@ motivate_webpage\
 - Navigation: hamburger menu ("N - NAME", current page gray band), ◄ ► wrap around, Left/Right arrow keys, Esc closes menu.
 - Old links `MOTIVATE.html#N` map to `site\index.html#N`, which redirects to page N.
 - American spelling; all times EDT. Launcher runs under pythonw.exe (no console, no print()).
+- Website (GitHub Pages) has no A button (https); the builder only works on the local server.
 - Log every session in `docs\SESSION_HISTORY.md` (date, request, decisions, files changed).

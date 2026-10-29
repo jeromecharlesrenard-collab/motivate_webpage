@@ -1,4 +1,6 @@
 # motivate_webpage
+Website: https://jeromecharlesrenard-collab.github.io/motivate_webpage/
+
 MOTIVATE - full-screen trading motivation pages (rules, principles, reminders) kept in view
 during the trading session.
 

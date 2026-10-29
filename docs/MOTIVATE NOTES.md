@@ -78,6 +78,16 @@ shortcut, help docx, CLAUDE.md, and session history.
 
 
 
+##### 20261029 Update
+
+
+
+1\. Website on GitHub Pages: https://jeromecharlesrenard-collab.github.io/motivate\_webpage/ (updated on every upload).
+
+2\. Every page builder CREATE / SAVE is uploaded to GitHub automatically; an OK notice says if the upload worked (config.json auto\_upload).
+
+
+
 ##### Next Update
 
 endfile

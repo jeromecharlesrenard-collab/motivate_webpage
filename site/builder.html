@@ -484,12 +484,18 @@
                 }
                 if (question && !confirm(question + '\nA backup of the site is saved first.')) return;
                 setBusy(true);
-                setStatus((editing ? 'Saving page ' : 'Creating page ') + k + '...');
+                setStatus((editing ? 'Saving page ' : 'Creating page ') + k + ' and uploading to GitHub...');
                 post(editing ? 'update' : 'create', spec).then(function (res) {
                     if (!res.ok) throw new Error(res.error);
                     if (!editing) clearDraft();
                     dirty = false;
                     setStatus((editing ? 'Saved ' : 'Created ') + res.file);
+                    if (res.upload) {
+                        alert((editing ? 'Saved ' : 'Created ') + res.file + '.
+
+' +
+                            (res.upload.ok ? '' : 'NOT uploaded to GitHub - ') + res.upload.message);
+                    }
                     location.href = res.file;
                 }).catch(function (err) {
                     setStatus(err.message || 'Save failed', true);

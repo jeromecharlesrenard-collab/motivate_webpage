@@ -17,12 +17,12 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
-from app import page_builder
+from app import github_sync, page_builder
 
 log = logging.getLogger(__name__)
 
 MAX_BODY = 1_000_000
-API_VERSION = 2          # bump when the API changes; the launcher replaces an older server
+API_VERSION = 3          # bump when the API changes; the launcher replaces an older server
 
 
 class MotivateServer(ThreadingHTTPServer):
@@ -30,9 +30,10 @@ class MotivateServer(ThreadingHTTPServer):
 
     daemon_threads = True
 
-    def __init__(self, port: int, site_dir: Path, backup_dir: Path) -> None:
+    def __init__(self, port: int, site_dir: Path, backup_dir: Path, auto_upload: bool = False) -> None:
         self.site_dir = site_dir
         self.backup_dir = backup_dir
+        self.auto_upload = auto_upload      # push every CREATE / SAVE to GitHub
         self.last_request = time.monotonic()
         self.write_lock = threading.Lock()
         super().__init__(("127.0.0.1", port), partial(Handler, directory=str(site_dir)))
@@ -133,6 +134,12 @@ class Handler(SimpleHTTPRequestHandler):
                 else:
                     log.info("User action: create page %s %r", spec.number, spec.name)
                     path = page_builder.insert_page(self.server.site_dir, spec, self.server.backup_dir)
+                upload = None
+                if route != "/api/preview" and self.server.auto_upload:
+                    action = "edit" if route == "/api/update" else "create"
+                    ok, notice = github_sync.upload(
+                        self.server.site_dir.parent, f"Page builder: {action} page {spec.number} - {spec.name}")
+                    upload = {"ok": ok, "message": notice}
         except ValueError as exc:
             self._send_json(400, {"ok": False, "error": str(exc)})
             return
@@ -140,7 +147,7 @@ class Handler(SimpleHTTPRequestHandler):
             log.exception("Page builder %s failed", route)
             self._send_json(500, {"ok": False, "error": "Unexpected error - see logs\\app.log"})
             return
-        self._send_json(200, {"ok": True, "file": path.name})
+        self._send_json(200, {"ok": True, "file": path.name, "upload": upload})
 
 
 def running_version(port: int) -> int | None:

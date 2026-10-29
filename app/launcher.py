@@ -36,6 +36,7 @@ DEFAULT_CONFIG: dict[str, Any] = {
     "start_page": "index.html",
     "port": 8765,
     "idle_minutes": 120,
+    "auto_upload": True,
 }
 
 log = logging.getLogger(__name__)
@@ -124,7 +125,7 @@ def open_site(config: dict[str, Any]) -> MotivateServer | None:
         log.info("Server already running on port %s", port)
     else:
         try:
-            srv = MotivateServer(port, SITE_DIR, BACKUP_DIR)
+            srv = MotivateServer(port, SITE_DIR, BACKUP_DIR, bool(config.get("auto_upload", True)))
         except OSError as exc:
             log.warning("Port %s unavailable (%s); opening the page from disk", port, exc)
             url = page.as_uri()
