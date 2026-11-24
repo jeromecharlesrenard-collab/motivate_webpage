@@ -96,6 +96,11 @@ Session ID: 6f5aa24e-4d19-443e-96a9-19f052c264c5 (transcript: `docs\sessions\202
 - Fix: the OK-notice edit put real line breaks inside a JS string; builder.html script failed (no LOAD, no lines). Replaced with 
 .
 
+**Follow-up 8 - Line Text box grows when selected (2026-11-24)**
+- Builder Line Text is now a textarea: one line normally; while selected it grows downward to show and edit
+  the whole text (wraps), back to one line on leaving. Enter adds no line break (use <br>); pasted breaks become spaces.
+- File: sitebuilder.html.
+
 **Open items**
 - Tests and shortcut launch: awaiting JR's authorization
 - Possible spelling fixes in original text (LOOSER, SUNK CURSE, wishfull, trimmming, shotting, lossing) - not changed

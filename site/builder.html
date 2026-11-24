@@ -49,7 +49,7 @@
         .field { display: flex; align-items: center; gap: 0.5rem; font-size: 1rem; }
         .field > span:first-child { min-width: 9.5rem; font-weight: bold; }
         .hint { font-size: 0.9rem; color: #083a5e; }
-        input, select {
+        input, select, textarea {
             font-family: Arial, sans-serif;
             font-size: 1rem;
             color: #000000;
@@ -59,7 +59,7 @@
             background: #ffffff;
         }
         input:disabled { background: #f0f0f0; color: #888888; }
-        input:focus-visible, select:focus-visible { outline: 2px solid #0070c0; outline-offset: 1px; }
+        input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid #0070c0; outline-offset: 1px; }
         input[type="number"] { width: 5rem; }
         input[type="color"] { width: 3rem; height: 1.9rem; padding: 0.1rem; }
         #pageName { width: 18rem; }
@@ -82,10 +82,22 @@
             border-bottom: 2px solid #000000;
             white-space: nowrap;
         }
-        table.lines td { padding: 0.2rem 0.35rem; white-space: nowrap; }
-        table.lines td:first-child { text-align: right; font-weight: bold; width: 2rem; }
+        table.lines td { padding: 0.2rem 0.35rem; white-space: nowrap; vertical-align: top; }
+        table.lines td:first-child { text-align: right; font-weight: bold; width: 2rem; padding-top: 0.5rem; }
         table.lines td.text-cell { width: 100%; }
-        table.lines input.text { width: 100%; min-width: 16rem; }
+        /* Line Text: one line; while selected it grows downward to show the whole text */
+        table.lines textarea.text {
+            display: block;
+            box-sizing: border-box;
+            width: 100%;
+            min-width: 16rem;
+            height: calc(1.3em + 0.5rem + 2px);
+            line-height: 1.3;
+            resize: none;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        table.lines textarea.text:focus { white-space: pre-wrap; overflow-wrap: anywhere; }
         .icon-btn {
             width: 1.8rem;
             height: 1.8rem;
@@ -246,7 +258,7 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML =
                     '<td></td>' +
-                    '<td class="text-cell"><input class="text" type="text" maxlength="500"></td>' +
+                    '<td class="text-cell"><textarea class="text" rows="1" maxlength="500" spellcheck="true"></textarea></td>' +
                     '<td><select class="font">' + options(FONTS) + '</select></td>' +
                     '<td><input class="size" type="number" min="0.5" max="20" step="0.1"></td>' +
                     '<td><select class="font_type">' + options(TYPES) + '</select></td>' +
@@ -335,6 +347,29 @@
                 else if (b.classList.contains('delete')) deleteLine(tr);
             });
             $('addLineBtn').addEventListener('click', function () { addLine(null); });
+
+            // Line Text grows to fit its text while selected, back to one line afterward.
+            function fitText(box) {
+                box.style.height = 'auto';
+                box.style.height = (box.scrollHeight + 2) + 'px';
+            }
+            tbody.addEventListener('focusin', function (e) {
+                if (e.target.classList.contains('text')) fitText(e.target);
+            });
+            tbody.addEventListener('focusout', function (e) {
+                if (!e.target.classList.contains('text')) return;
+                e.target.style.height = '';
+                e.target.scrollLeft = 0;
+            });
+            tbody.addEventListener('input', function (e) {
+                const box = e.target;
+                if (!box.classList.contains('text')) return;
+                if (/[\r\n]/.test(box.value)) box.value = box.value.replace(/\r?\n|\r/g, ' ');   // pasted line breaks
+                fitText(box);
+            });
+            tbody.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && e.target.classList.contains('text')) e.preventDefault();   // use <br> for a new line
+            });
 
             // ---------- Read / write the form ----------
             function getSpec() {
