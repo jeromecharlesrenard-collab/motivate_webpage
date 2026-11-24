@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- MOTIVATE info page (opened by the "I" circle, bottom right of every page).
-     Same format as the info pages of the other apps: white full page, black Arial 12 pt text,
-     14 pt bold titles, 0.75" margins, left aligned, 1.15 line spacing, one extra line between paragraphs.
+     Same format as the info pages of the other apps, 4 pt larger: white full page, black Arial 16 pt text,
+     18 pt bold titles, each paragraph on one unwrapped line, 0.75" margins, left aligned, 1.15 line spacing, one extra line between paragraphs.
      Scroll: mouse wheel, scroll bar, arrow keys, Page Up/Down, Home, End, Space. Any other key or a click closes it. -->
 <html lang="en">
 <head>
@@ -13,20 +13,21 @@
         html, body { margin: 0; background: #ffffff; }
         body {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 12pt;
+            font-size: 16pt;
             line-height: 1.15;
             color: #000000;
             text-align: left;
             cursor: default;
         }
-        main { max-width: 7in; padding: 0.75in; }
-        h1, h2, h3 { font-size: 14pt; font-weight: bold; margin: 0 0 1.15em 0; }
-        h3 { font-size: 12pt; margin-bottom: 0; }
+        main { padding: 0.75in; }
+        h1, h2, h3 { font-size: 18pt; font-weight: bold; margin: 0 0 1.15em 0; }
+        h3 { font-size: 16pt; margin-bottom: 0; }
         p, ul, ol { margin: 0 0 1.15em 0; }
+        p, li { white-space: nowrap; }   /* one line each, full window width (scroll sideways if longer) */
         ul, ol { padding-left: 1.6em; }
         li + li { margin-top: 0.3em; }
         code { font-family: Arial, Helvetica, sans-serif; font-weight: bold; }
-        .close-hint { font-size: 10pt; color: #000000; }
+        .close-hint { font-size: 14pt; color: #000000; }
         @media (max-width: 600px) { main { padding: 0.5in 16px; } }
     </style>
 </head>
