@@ -109,8 +109,7 @@ Session ID: 6f5aa24e-4d19-443e-96a9-19f052c264c5 (transcript: `docs\sessions\202
   (A/I, gray-band menu, website, auto upload, Line Text growth) + JR's <br> / &nbsp; lines. Hard-coded page
   list dropped (menu/home are the list). The docx is now older than info.html.
 - tests: info.html added to EXTRA_FILES (no nav.js / css required).
-- Files: site\info.html, site\js
-av.js, site\css\motivate.css, tests	est_site.py, CLAUDE.md.
+- Files: site\info.html, site\js\nav.js, site\css\motivate.css, tests\test_site.py, CLAUDE.md.
 
 **Open items**
 - Tests and shortcut launch: awaiting JR's authorization
