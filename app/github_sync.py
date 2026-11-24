@@ -9,12 +9,14 @@ from __future__ import annotations
 import logging
 import os
 import subprocess
+import threading
 from pathlib import Path
 
 log = logging.getLogger(__name__)
 
 TIMEOUT = 60
 WEBSITE = "https://jeromecharlesrenard-collab.github.io/motivate_webpage/"
+_lock = threading.Lock()                    # one git run at a time (builder save + info page)
 
 
 def _git(project_dir: Path, *args: str) -> subprocess.CompletedProcess[str]:
@@ -31,6 +33,11 @@ def _git(project_dir: Path, *args: str) -> subprocess.CompletedProcess[str]:
 
 def upload(project_dir: Path, message: str) -> tuple[bool, str]:
     """Commit every change in the project and push it; return (ok, notice for the user)."""
+    with _lock:
+        return _upload(project_dir, message)
+
+
+def _upload(project_dir: Path, message: str) -> tuple[bool, str]:
     try:
         steps = [("add", "-A"), ("commit", "-q", "-m", message), ("push", "-q")]
         for args in steps:

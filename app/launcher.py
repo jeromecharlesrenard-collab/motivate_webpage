@@ -109,6 +109,7 @@ def open_site(config: dict[str, Any]) -> MotivateServer | None:
     the port is busy (the page then opens from disk, builder read-only).
     """
     page = start_page_path(config)
+    server.refresh_info(PROJECT_DIR, bool(config.get("auto_upload", True)))
     port = int(config.get("port", 8765))
     url = f"http://127.0.0.1:{port}/{page.name}"
     srv = None

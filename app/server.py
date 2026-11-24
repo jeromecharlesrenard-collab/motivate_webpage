@@ -17,12 +17,21 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
-from app import github_sync, page_builder
+from app import github_sync, info_page, page_builder
 
 log = logging.getLogger(__name__)
 
 MAX_BODY = 1_000_000
-API_VERSION = 3          # bump when the API changes; the launcher replaces an older server
+API_VERSION = 4          # bump when the API changes; the launcher replaces an older server
+
+
+def refresh_info(project_dir: Path, auto_upload: bool) -> None:
+    """Rebuild site/info.html when the Word master copy changed; upload it in the background."""
+    if info_page.refresh(project_dir) and auto_upload:
+        threading.Thread(
+            target=github_sync.upload,
+            args=(project_dir, "Info page: rebuilt from MOTIVATE_info_page.docx"),
+        ).start()
 
 
 class MotivateServer(ThreadingHTTPServer):
@@ -86,7 +95,11 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802 - stdlib name
         self.server.last_request = time.monotonic()
         url = urlsplit(self.path)
-        if url.path == "/api/ping":
+        if url.path == "/" + info_page.PAGE_NAME:
+            with self.server.write_lock:
+                refresh_info(self.server.site_dir.parent, self.server.auto_upload)
+            super().do_GET()
+        elif url.path == "/api/ping":
             self._send_json(200, {"ok": True, "app": "MOTIVATE", "version": API_VERSION})
         elif url.path == "/api/page":
             try:
