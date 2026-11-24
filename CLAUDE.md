@@ -3,7 +3,8 @@
 ## Purpose
 Full-screen trading motivation pages (rules, principles, reminders) kept in view during the
 trading session. Static HTML/CSS/JS served by a small local pythonw server (127.0.0.1 only),
-which also powers the in-page PAGE BUILDER (black "A" circle, bottom right of every page).
+which also powers the in-page PAGE BUILDER (black "A" circle, bottom left of every page).
+The black "I" circle (bottom right) opens site\info.html, the info page.
 
 ## Folder Structure
 ```
@@ -21,10 +22,12 @@ motivate_webpage\
   site\                    THE WEBPAGE (multi-page version)
     index.html             home: title + 4-per-row rounded boxes "N - NAME" (built from nav.js PAGES)
     builder.html           PAGE BUILDER form (not in PAGES); _preview.html = temporary preview
+    info.html              INFO page (not in PAGES): info-page format (Arial 12 black, 14 bold titles,
+                           0.75in margins); any key/click closes it. Update it when features change.
     01_key_points.html ... 12_principles.html   one file per original page
     13_patience.html       developed from page 2 line "BE PATIENT - FOCUSED AND DISCIPLINED"
     14_page_14 .. 16_page_16.html   placeholders (marked <!-- placeholder -->)
-    css\motivate.css       shared look (fonts, colors, menu, page indicator, arrows, A button)
+    css\motivate.css       shared look (fonts, colors, menu, page indicator, arrows, A / I buttons)
     js\nav.js              shared navigation; PAGES list (PAGES-BEGIN/END, one JSON object per
                            line) = single source of truth, rewritten by the page builder
   assets\                  MOTIVATE_ORIGINAL.html (original single-file version, reference only),

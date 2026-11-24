@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!-- MOTIVATE info page (opened by the "I" circle, bottom right of every page).
+     Same format as the info pages of the other apps: white full page, black Arial 12 pt text,
+     14 pt bold titles, 0.75" margins, left aligned, 1.15 line spacing, one extra line between paragraphs.
+     Scroll: mouse wheel, scroll bar, arrow keys, Page Up/Down, Home, End, Space. Any other key or a click closes it. -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOTIVATE INFO</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300b050' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8'/><path d='M12 18V6'/></svg>">
+    <style>
+        html, body { margin: 0; background: #ffffff; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12pt;
+            line-height: 1.15;
+            color: #000000;
+            text-align: left;
+            cursor: default;
+        }
+        main { max-width: 7in; padding: 0.75in; }
+        h1, h2, h3 { font-size: 14pt; font-weight: bold; margin: 0 0 1.15em 0; }
+        h3 { font-size: 12pt; margin-bottom: 0; }
+        p, ul, ol { margin: 0 0 1.15em 0; }
+        ul, ol { padding-left: 1.6em; }
+        li + li { margin-top: 0.3em; }
+        code { font-family: Arial, Helvetica, sans-serif; font-weight: bold; }
+        .close-hint { font-size: 10pt; color: #000000; }
+        @media (max-width: 600px) { main { padding: 0.5in 16px; } }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>MOTIVATE - INFO PAGE</h1>
+        <p class="close-hint">Scroll with the mouse wheel, the scroll bar, or the arrow / Page Up / Page Down / Home / End keys.
+            Any other key or a click closes this page.</p>
+
+        <h2>PURPOSE</h2>
+        <ul>
+            <li>MOTIVATE is a set of full-screen trading motivation pages (rules, principles, and reminders) to keep in
+                view during the trading session.</li>
+            <li>Each page is its own HTML file in the site folder; the home page has a box for every page.</li>
+            <li>The PAGE BUILDER creates and edits pages from a form, without editing any HTML.</li>
+            <li>Website: <strong>jeromecharlesrenard-collab.github.io/motivate_webpage</strong> (updated after every
+                page builder CREATE or SAVE).</li>
+        </ul>
+
+        <h2>HOW TO USE</h2>
+        <ul>
+            <li><strong>Launch:</strong> double-click the MOTIVATE shortcut. The home page opens in your default web browser.</li>
+            <li><strong>Home page:</strong> click a box (e.g. 1 - KEY POINTS) to open that page.</li>
+            <li><strong>Menu</strong> (top left): opens the page list; the current page has a gray band. Esc or a click
+                outside the menu closes it.</li>
+            <li><strong>Arrows</strong> next to the menu: previous / next page (wraps around). The Left and Right arrow keys do the same.</li>
+            <li><strong>Page number:</strong> the small number under the menu.</li>
+            <li><strong>A</strong> (black circle, bottom left): opens the PAGE BUILDER. Not shown on the website.</li>
+            <li><strong>I</strong> (black circle, bottom right): opens this info page.</li>
+        </ul>
+
+        <h2>PAGE BUILDER</h2>
+        <h3>Modes</h3>
+        <ul>
+            <li><strong>New Page:</strong> creates a page. <strong>Page Number</strong> is where it goes; the pages
+                from that number on move up by one (files, menu, home boxes, page numbers, and links are all updated).
+                The default is the page after the one you came from.</li>
+            <li><strong>Edit Existing Page:</strong> enter the <strong>Page to Edit</strong> and click LOAD (or press
+                Enter); the name, alignment, and all lines of that page fill the form. The page keeps its number; a new
+                name renames its file, menu entry, and home box.</li>
+        </ul>
+        <h3>Page Settings</h3>
+        <ul>
+            <li><strong>Page Name:</strong> shown in the menu and on the home page box.</li>
+            <li><strong>Horizontal Align:</strong> Center, Left, or Right, with an indent for Left / Right.</li>
+            <li><strong>Vertical Align:</strong> Middle, Top, or Bottom, with an indent for Top / Bottom.</li>
+            <li>Sizes, indents, and spacing are in rem (1 rem is about the height of normal text).</li>
+        </ul>
+        <h3>Lines (20 max)</h3>
+        <ul>
+            <li>Each line: text, font, font size, font type (Normal, Bold, Italic, Bold Italic), font color, and spacing after.</li>
+            <li><strong>Line Text</strong> grows downward while selected, so the whole text can be read and edited;
+                it goes back to one line when you click elsewhere. Enter adds no line break (use <code>&lt;br&gt;</code>).</li>
+            <li><strong>+</strong> adds a line below (copying its style), <strong>x</strong> deletes the line,
+                <strong>ADD LINE</strong> adds one at the end. Empty lines are skipped.</li>
+        </ul>
+        <h3>Line Text: &lt;br&gt; and &amp;nbsp;</h3>
+        <ul>
+            <li><code>&lt;br&gt;</code> starts a new line within the same line's text, with the same font, size and color.</li>
+            <li><code>&amp;nbsp;</code> is a space that never disappears and never lets the line wrap at that point.</li>
+            <li>A line with only <code>&amp;nbsp;</code> (or only <code>&lt;br&gt;</code>) is a blank spacer line.</li>
+            <li>Other tags kept: <code>&lt;strong&gt;</code>bold<code>&lt;/strong&gt;</code>,
+                <code>&lt;em&gt;</code>italic<code>&lt;/em&gt;</code>, <code>&lt;u&gt;</code>underline<code>&lt;/u&gt;</code>.</li>
+        </ul>
+        <h3>Buttons</h3>
+        <ul>
+            <li><strong>PREVIEW:</strong> opens the page in its own tab without saving.</li>
+            <li><strong>CREATE</strong> (new) / <strong>SAVE</strong> (edit): saves the page, uploads it to GitHub
+                (an OK notice shows the result), then opens it. The website updates about a minute later.</li>
+            <li><strong>RESET:</strong> clears the form (new) or reloads the page as saved (edit).</li>
+            <li><strong>EXIT:</strong> goes back. A new-page form is remembered until CREATE or RESET.</li>
+            <li>Before every CREATE or SAVE, the whole site is backed up to
+                assets\archives\saved\site_backup_&lt;date_time&gt;.zip.</li>
+            <li>The builder works only when MOTIVATE is opened with its shortcut (it needs the local MOTIVATE server).</li>
+        </ul>
+
+        <h2>OPTIONS (config.json)</h2>
+        <ul>
+            <li><strong>start_page:</strong> the page the shortcut opens (default index.html, e.g. 01_key_points.html).</li>
+            <li><strong>log_level:</strong> INFO (default) or DEBUG. The log is in logs\app.log (EDT times).</li>
+            <li><strong>port:</strong> local server port (default 8765).</li>
+            <li><strong>idle_minutes:</strong> the server stops after this long with no page open (default 120);
+                double-click the shortcut again to restart it.</li>
+            <li><strong>auto_upload:</strong> true (default) uploads every CREATE / SAVE to GitHub; false keeps changes on this PC only.</li>
+        </ul>
+    </main>
+    <script>
+        (function () {
+            'use strict';
+            const SCROLL_KEYS = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'PageUp', 'PageDown', 'Home', 'End', ' ',
+                'Shift', 'Control', 'Alt', 'Meta'];
+
+            function close() {
+                if (history.length === 1) {                           // its own tab (opened from the builder)
+                    window.close();
+                    setTimeout(function () { location.href = 'index.html'; }, 200);   // if the browser refuses
+                } else if (document.referrer) {
+                    history.back();
+                } else {
+                    location.href = 'index.html';
+                }
+            }
+
+            document.addEventListener('keydown', function (e) {
+                if (SCROLL_KEYS.indexOf(e.key) === -1 && !e.ctrlKey && !e.metaKey) close();
+            });
+            document.addEventListener('click', function () {
+                if (!String(window.getSelection())) close();         // selecting text does not close
+            });
+        })();
+    </script>
+</body>
+</html>

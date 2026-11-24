@@ -86,6 +86,8 @@ shortcut, help docx, CLAUDE.md, and session history.
 
 2\. Every page builder CREATE / SAVE is uploaded to GitHub automatically; an OK notice says if the upload worked (config.json auto\_upload).
 
+3\. A (page builder) moved to the bottom left; new I (bottom right) opens the info page (site\info.html).
+
 
 
 ##### Next Update

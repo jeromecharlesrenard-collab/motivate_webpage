@@ -99,7 +99,18 @@ Session ID: 6f5aa24e-4d19-443e-96a9-19f052c264c5 (transcript: `docs\sessions\202
 **Follow-up 8 - Line Text box grows when selected (2026-11-24)**
 - Builder Line Text is now a textarea: one line normally; while selected it grows downward to show and edit
   the whole text (wraps), back to one line on leaving. Enter adds no line break (use <br>); pasted breaks become spaces.
-- File: sitebuilder.html.
+- File: site\builder.html.
+
+**Follow-up 9 - A moved left, new I info page (2026-11-24)**
+- A (page builder) circle moved to the bottom left; new matching I circle at the bottom right opens
+  site\info.html (new tab from the builder so the form is kept).
+- info.html: info-page format of JR's other apps (white page, Arial 12 black, 14 bold titles, 0.75in margins,
+  1.15 spacing; any key or click closes, scroll keys scroll). Content from MOTIVATE_info_page.docx, updated
+  (A/I, gray-band menu, website, auto upload, Line Text growth) + JR's <br> / &nbsp; lines. Hard-coded page
+  list dropped (menu/home are the list). The docx is now older than info.html.
+- tests: info.html added to EXTRA_FILES (no nav.js / css required).
+- Files: site\info.html, site\js
+av.js, site\css\motivate.css, tests	est_site.py, CLAUDE.md.
 
 **Open items**
 - Tests and shortcut launch: awaiting JR's authorization

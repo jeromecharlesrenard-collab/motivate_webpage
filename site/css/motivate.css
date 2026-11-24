@@ -167,7 +167,7 @@ html, body {
 /* ---------- Page builder button (bottom right) ---------- */
 .builder-btn {
     position: fixed;
-    right: 16px;
+    left: 16px;
     bottom: 16px;
     width: 26px;
     height: 26px;
@@ -183,6 +183,7 @@ html, body {
 }
 .builder-btn:hover { background: #0070c0; }
 .builder-btn:focus-visible { outline: 2px solid #0070c0; outline-offset: 3px; }
+.info-btn { left: auto; right: 16px; }   /* I: bottom right; A: bottom left */
 
 @media (prefers-reduced-motion: reduce) {
     .nav-panel, .nav-scrim { transition: none; }

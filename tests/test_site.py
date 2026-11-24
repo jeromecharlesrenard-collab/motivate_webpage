@@ -10,7 +10,7 @@ from app import launcher, page_builder
 
 SITE = launcher.SITE_DIR
 NAV_PAGES = [(p["id"], p["file"]) for p in page_builder.read_pages(SITE)]
-EXTRA_FILES = {"builder.html"}          # in site/ but not in the page list
+EXTRA_FILES = {"builder.html", "info.html"}   # in site/ but not in the page list
 HTML_FILES = sorted(p for p in SITE.glob("*.html") if not p.name.startswith("_"))
 VOID = {"meta", "link", "br", "img", "input", "hr"}
 
@@ -66,7 +66,8 @@ def test_page_markup(path: Path) -> None:
         assert parser.body_page == dict((f, i) for i, f in NAV_PAGES)[path.name]
     for ref in parser.refs:
         assert (SITE / ref).exists(), f"{path.name} -> {ref}"
-    assert "css/motivate.css" in parser.refs and "js/nav.js" in parser.refs
+    if path.name != "info.html":                 # info page: plain document, closes on any key/click
+        assert "css/motivate.css" in parser.refs and "js/nav.js" in parser.refs
 
 
 def test_marathon_links_to_patience() -> None:

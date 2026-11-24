@@ -94,6 +94,15 @@
         builderBtn.textContent = 'A';
         controls.push(builderBtn);
     }
+    // "I" opens the info page (in its own tab from the builder, so the form is kept).
+    const infoBtn = document.createElement('a');
+    infoBtn.className = 'builder-btn info-btn';
+    infoBtn.href = 'info.html';
+    if (currentId === 'builder') infoBtn.target = '_blank';
+    infoBtn.title = 'Info page';
+    infoBtn.setAttribute('aria-label', 'Open the info page');
+    infoBtn.textContent = 'I';
+    controls.push(infoBtn);
     controls.forEach(function (el) {
         document.body.insertBefore(el, document.body.firstChild);
     });
