@@ -1,12 +1,13 @@
 """Checks on the multi-page site and the launcher logic (no browser is opened)."""
 
 import json
+import os
 from html.parser import HTMLParser
 from pathlib import Path
 
 import pytest
 
-from app import launcher, page_builder
+from app import info_page, launcher, page_builder
 
 SITE = launcher.SITE_DIR
 NAV_PAGES = [(p["id"], p["file"]) for p in page_builder.read_pages(SITE)]
@@ -244,3 +245,34 @@ def test_insert_rejects_out_of_range_number(tmp_path: Path) -> None:
     site = make_site(tmp_path)
     with pytest.raises(ValueError, match="between 1 and 4"):
         page_builder.insert_page(site, spec(number=9))
+
+
+# ------------------------------------------------------------ info page ----
+
+INFO_DOCX = launcher.PROJECT_DIR / "assets" / info_page.DOCX_NAME
+
+
+def test_info_page_matches_docx() -> None:
+    """site/info.html is the current build of the Word master copy."""
+    body = info_page.docx_to_html(INFO_DOCX)
+    page = (SITE / info_page.PAGE_NAME).read_text(encoding="utf-8")
+    assert body in page and info_page.BODY_MARK not in page
+
+
+def test_info_docx_mapping() -> None:
+    body = info_page.docx_to_html(INFO_DOCX)
+    assert body.count("<h1>") == 1 and "<h2>PURPOSE</h2>" in body and "<h3>Modes</h3>" in body
+    assert "<li><strong>&lt;br&gt;</strong> starts a new line" in body      # typed tags stay text
+    assert "<ul>" in body and body.count("<ul>") == body.count("</ul>")
+
+
+def test_info_refresh_only_when_docx_is_newer(tmp_path: Path) -> None:
+    (tmp_path / "assets").mkdir()
+    (tmp_path / "site").mkdir()
+    docx = tmp_path / "assets" / info_page.DOCX_NAME
+    docx.write_bytes(INFO_DOCX.read_bytes())
+    assert info_page.refresh(tmp_path) is True
+    assert info_page.refresh(tmp_path) is False
+    later = (tmp_path / "site" / info_page.PAGE_NAME).stat().st_mtime + 10
+    os.utime(docx, (later, later))
+    assert info_page.refresh(tmp_path) is True

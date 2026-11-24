@@ -117,6 +117,15 @@ Session ID: 6f5aa24e-4d19-443e-96a9-19f052c264c5 (transcript: `docs\sessions\202
 
 - Then: no sideways scroll; text uses the full window width and wraps only at the window edge.
 
+**Follow-up 11 - info page editable in Word (2026-11-24)**
+- Decision (JR: ga): the Word file assets\MOTIVATE_info_page.docx is the master copy; site\info.html is generated.
+- New app\info_page.py (stdlib zip/XML converter) + app\info_template.html (page look). Rebuilt when the docx
+  is newer: at launcher start and on every GET /info.html (I click); then uploaded to GitHub (auto_upload).
+  github_sync now runs one git upload at a time. server API_VERSION 4.
+- New docx written in JR's default docx format with the current info text + a "THIS INFO PAGE" section
+  (JR had renamed the previous one to MOTIVATE_info_page_old.docx).
+- Tests added (not run): info.html matches the docx, mapping, rebuild only when newer.
+
 **Open items**
 - Tests and shortcut launch: awaiting JR's authorization
 - Possible spelling fixes in original text (LOOSER, SUNK CURSE, wishfull, trimmming, shotting, lossing) - not changed

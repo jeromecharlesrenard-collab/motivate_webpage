@@ -16,14 +16,17 @@ motivate_webpage\
   app\launcher.py          config, EDT logging, error dialogs, open-in-browser / server start
   app\server.py            local HTTP server: serves site\; GET /api/ping, /api/page?n=N;
                            POST /api/preview, /api/create, /api/update, /api/shutdown
-  app\github_sync.py       git add/commit/push after every builder CREATE / SAVE (auto_upload)
+  app\github_sync.py       git add/commit/push after every builder CREATE / SAVE and info page rebuild (auto_upload)
+  app\info_page.py         builds site\info.html from assets\MOTIVATE_info_page.docx (stdlib zip/XML) into
+                           app\info_template.html; rebuilt when the docx is newer (launcher start, GET /info.html)
   app\page_builder.py      builder logic: validate spec, render page, insert + renumber,
                            load existing page (parses original style-x and builder line-N pages), edit, backup
   site\                    THE WEBPAGE (multi-page version)
     index.html             home: title + 4-per-row rounded boxes "N - NAME" (built from nav.js PAGES)
     builder.html           PAGE BUILDER form (not in PAGES); _preview.html = temporary preview
-    info.html              INFO page (not in PAGES): info-page format (Arial 12 black, 14 bold titles,
-                           0.75in margins); any key/click closes it. Update it when features change.
+    info.html              INFO page (not in PAGES), GENERATED - never edit it: edit the docx (text) or
+                           app\info_template.html (look: Arial 16/18 black, full width); any key/click closes it.
+                           Update the docx when features change.
     01_key_points.html ... 12_principles.html   one file per original page
     13_patience.html       developed from page 2 line "BE PATIENT - FOCUSED AND DISCIPLINED"
     14_page_14 .. 16_page_16.html   placeholders (marked <!-- placeholder -->)
@@ -31,7 +34,8 @@ motivate_webpage\
     js\nav.js              shared navigation; PAGES list (PAGES-BEGIN/END, one JSON object per
                            line) = single source of truth, rewritten by the page builder
   assets\                  MOTIVATE_ORIGINAL.html (original single-file version, reference only),
-                           MOTIVATE.ico, MOTIVATE_info_page.docx (help), archives\ (old versions; *.html not on GitHub)
+                           MOTIVATE.ico, MOTIVATE_info_page.docx (info page master copy: 14 pt bold
+                           paragraph = title, 12 pt bold = sub-title, List Bullet = bullet), archives\ (old versions; *.html not on GitHub)
   assets\archives\saved\   site_backup_*.zip (before every CREATE / SAVE)
   docs\                    MOTIVATE NOTES.md, SESSION_HISTORY.md, sessions\ (raw transcripts)
   logs\app.log             rotating log (1 MB x 5), EDT timestamps

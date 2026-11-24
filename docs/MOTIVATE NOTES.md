@@ -88,6 +88,8 @@ shortcut, help docx, CLAUDE.md, and session history.
 
 3\. A (page builder) moved to the bottom left; new I (bottom right) opens the info page (site\info.html).
 
+4\. Info page text is edited in Word: assets\MOTIVATE\_info\_page.docx. Save it; the next I click (or MOTIVATE start) rebuilds the info page and uploads it.
+
 
 
 ##### Next Update
