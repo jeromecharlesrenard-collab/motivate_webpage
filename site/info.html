@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- MOTIVATE info page (opened by the "I" circle, bottom right of every page).
      Same format as the info pages of the other apps, 4 pt larger: white full page, black Arial 16 pt text,
-     18 pt bold titles, each paragraph on one unwrapped line, 0.75" margins, left aligned, 1.15 line spacing, one extra line between paragraphs.
+     18 pt bold titles, text uses the full window width, 0.75" margins, left aligned, 1.15 line spacing, one extra line between paragraphs.
      Scroll: mouse wheel, scroll bar, arrow keys, Page Up/Down, Home, End, Space. Any other key or a click closes it. -->
 <html lang="en">
 <head>
@@ -10,7 +10,7 @@
     <title>MOTIVATE INFO</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300b050' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8'/><path d='M12 18V6'/></svg>">
     <style>
-        html, body { margin: 0; background: #ffffff; }
+        html, body { margin: 0; background: #ffffff; overflow-x: hidden; }
         body {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 16pt;
@@ -23,7 +23,7 @@
         h1, h2, h3 { font-size: 18pt; font-weight: bold; margin: 0 0 1.15em 0; }
         h3 { font-size: 16pt; margin-bottom: 0; }
         p, ul, ol { margin: 0 0 1.15em 0; }
-        p, li { white-space: nowrap; }   /* one line each, full window width (scroll sideways if longer) */
+        p, li { overflow-wrap: anywhere; }   /* full window width; wraps only at the window edge (no sideways scroll) */
         ul, ol { padding-left: 1.6em; }
         li + li { margin-top: 0.3em; }
         code { font-family: Arial, Helvetica, sans-serif; font-weight: bold; }

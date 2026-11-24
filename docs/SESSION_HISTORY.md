@@ -111,6 +111,12 @@ Session ID: 6f5aa24e-4d19-443e-96a9-19f052c264c5 (transcript: `docs\sessions\202
 - tests: info.html added to EXTRA_FILES (no nav.js / css required).
 - Files: site\info.html, site\js\nav.js, site\css\motivate.css, tests\test_site.py, CLAUDE.md.
 
+**Follow-up 10 - info page larger, no wrap (2026-11-24)**
+- info.html: text 16 pt, titles 18 pt (+4 pt); width limit removed; each item on one unwrapped line
+  (sideways scroll if longer than the window).
+
+- Then: no sideways scroll; text uses the full window width and wraps only at the window edge.
+
 **Open items**
 - Tests and shortcut launch: awaiting JR's authorization
 - Possible spelling fixes in original text (LOOSER, SUNK CURSE, wishfull, trimmming, shotting, lossing) - not changed
